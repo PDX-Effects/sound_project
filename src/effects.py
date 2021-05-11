@@ -1,15 +1,15 @@
 class Effects:
     def chorus(self, data):
-        return 0
+        return data
 
     def flang(self, data):
-        return 0
+        return data
 
     def delay(self, data):
-        return 0
+        return data
 
     def floop(self, data):
-        return 0
+        return data
 
     def clipping(self, data):
-        return 0
+        return data
