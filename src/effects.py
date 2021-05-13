@@ -1,15 +1,18 @@
+from frame import Frame
+
+
 class Effects:
-    def chorus(self, data):
-        return data
+    def chorus(self, info):
+        return info
 
-    def flang(self, data):
-        return data
+    def flang(self, info):
+        return info
 
-    def delay(self, data):
-        return data
+    def delay(self, info):
+        return info
 
-    def floop(self, data):
-        return data
+    def floop(self, info):
+        return info
 
-    def clipping(self, data):
-        return data
+    def clipping(self, info):
+        return info

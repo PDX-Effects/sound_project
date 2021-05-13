@@ -4,35 +4,32 @@ import pyaudio
 
 
 class IO:
-    sample_size = pyaudio.paInt16
-    channels = 0
-    wid = 0
-    rate = 0
-    dur = 0
     wav_file = wv.open('gc.wav')
 
-    def read_audio(self):
-        self.channels = self.wav_file.getnchannels()
-        self.wid = self.wav_file.getsampwidth()
-        self.rate = self.wav_file.getframerate()
-        self.dur = self.wav_file.getnframes()
-        data = np.frombuffer(self.wav_file.readframes(self.dur), dtype=np.int16)
-        return data
+    def read_audio(self, info):
+        wav_file = wv.open(info.filename)
+        info.samplesize = pyaudio.paInt16
+        info.nchannels = wav_file.getnchannels()
+        info.sampwidth = wav_file.getsampwidth()
+        info.framerate = wav_file.getframerate()
+        info.frames = wav_file.getnframes()
+        info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
+        return info
 
-    def write_audio(self, data):
-        wf = wv.open(str("r" + 'gc.wav'), 'wb')
-        wf.setnchannels(self.channels)
+    def write_audio(self, info):
+        wf = wv.open(str("r" + info.filename), 'wb')
+        wf.setnchannels(info.nchannels)
         wf.setsampwidth(2)  # 1 byte = 8bits so 2 byte = 16 bits
-        wf.setframerate(self.rate)
-        wf.writeframes(data)
+        wf.setframerate(info.framerate)
+        wf.writeframes(info.samples)
         wf.close()
         return 0
 
-    def play_audio(self, data):
-        data = data.tobytes()
+    def play_audio(self, info):
+        info.samples = info.samples.tobytes()
         p = pyaudio.PyAudio()
-        stream = p.open(format=self.sample_size, channels=self.channels, rate=self.rate, output=True)
-        stream.write(data)
+        stream = p.open(format=info.samplesize, channels=info.nchannels, rate=info.framerate, output=True)
+        stream.write(info.samples)
         stream.stop_stream()
         stream.close()
         p.terminate()
