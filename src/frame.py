@@ -5,4 +5,4 @@ class Frame:
     sampwidth = 0
     framerate = 0
     nframes = 0
-    samples = 0 #bytes-like object https://docs.python.org/3/library/stdtypes.html#bytes
+    samples = 0 #bytes object  https://docs.python.org/3/library/stdtypes.html#bytes

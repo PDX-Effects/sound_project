@@ -13,7 +13,8 @@ class IO:
         info.sampwidth = wav_file.getsampwidth()
         info.framerate = wav_file.getframerate()
         info.frames = wav_file.getnframes()
-        info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
+        #info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
+        info.samples = wav_file.readframes(info.frames)
         return info
 
     def write_audio(self, info):
@@ -26,7 +27,7 @@ class IO:
         return 0
 
     def play_audio(self, info):
-        info.samples = info.samples.tobytes()
+#        info.samples = info.samples.tobytes()
         p = pyaudio.PyAudio()
         stream = p.open(format=info.samplesize, channels=info.nchannels, rate=info.framerate, output=True)
         stream.write(info.samples)

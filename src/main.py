@@ -26,7 +26,7 @@ def play_background():
 if __name__ == "__main__":
     info.filename = 'gc.wav'
     info = audio.read_audio(info)
-   # play(info)
     chorus_effect(info)
+    play(info)
 
 
