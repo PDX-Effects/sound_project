@@ -2,10 +2,14 @@ from i_o import IO
 from effects import Effects
 from frame import Frame
 import threading
+import pyaudio
 
 audio = IO()
 eff = Effects()
 info = Frame()
+
+def chorus_effect(frame_data):
+    eff.chorus(frame_data)
 
 
 def play(t_info):
@@ -18,8 +22,11 @@ def play_background():
     play_thread.daemon = True
     play_thread.start()
 
-
+#fills info object with frame data
 if __name__ == "__main__":
     info.filename = 'gc.wav'
     info = audio.read_audio(info)
-    play(info)
+   # play(info)
+    chorus_effect(info)
+
+
