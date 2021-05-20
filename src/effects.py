@@ -13,12 +13,7 @@ class Effects:
     def phaser(self, info):
         return info
 
-    def delay(self, info, echo=0.1, amp=0.5):
-        delay_frame = round(echo * info.framerate)
-        delay_frame_zero = np.zeros(delay_frame)
-        delay_samp = np.concatenate((delay_frame_zero, info.samples))
-        info.samples = np.concatenate((info.samples, delay_frame_zero))
-        info.samples = info.samples + delay_samp * amp
+    def delay(self, info):
         return info
 
     def floop(self, info):
@@ -26,3 +21,7 @@ class Effects:
 
     def clipping(self, info):
         return info
+
+    def mix_audio(self, source_one, amp_one, source_two, amp_two):
+        return source_one * amp_one + source_two * amp_two
+
