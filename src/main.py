@@ -22,4 +22,6 @@ def play_background():
 if __name__ == "__main__":
     info.filename = 'gc.wav'
     info = audio.read_audio(info)
-    play(info)
+    info = eff.delay(info)
+    #play(info)
+    audio.write_audio(info)

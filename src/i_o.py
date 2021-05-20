@@ -4,19 +4,28 @@ import pyaudio
 
 
 class IO:
-    wav_file = wv.open('gc.wav')
 
     def read_audio(self, info):
         wav_file = wv.open(info.filename)
-        info.samplesize = pyaudio.paInt16
+        info.samplesize = pyaudio.paFloat32
         info.nchannels = wav_file.getnchannels()
         info.sampwidth = wav_file.getsampwidth()
         info.framerate = wav_file.getframerate()
         info.frames = wav_file.getnframes()
+
+        # conversion to float32 or [-1, 1] normalization
+        # https://stackoverflow.com/questions/16778878/python-write-a-wav-file-into-numpy-float-array
         info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
+        info.samples = info.samples.astype(np.float32)
+        info.samples = info.samples / (2 ** 15)
         return info
 
     def write_audio(self, info):
+        # conversion to int16 and normalizing amplitude at 50% volume for pyaudio to process
+        info.samples = (info.samples * int((2 ** 15) / 2))
+        info.samples = info.samples.astype(np.int16).tobytes()
+
+        # writing to file
         wf = wv.open(str("r" + info.filename), 'wb')
         wf.setnchannels(info.nchannels)
         wf.setsampwidth(2)  # 1 byte = 8bits so 2 byte = 16 bits
