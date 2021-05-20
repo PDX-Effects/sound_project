@@ -21,6 +21,9 @@ class Effects:
     def flang(self, info):
         return info
 
+    def phaser(self, info):
+        return info
+
     def delay(self, info):
         return info
 
@@ -29,3 +32,7 @@ class Effects:
 
     def clipping(self, info):
         return info
+
+    def mix_audio(self, source_one, amp_one, source_two, amp_two):
+        return source_one * amp_one + source_two * amp_two
+
