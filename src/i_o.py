@@ -12,12 +12,8 @@ class IO:
         info.sampwidth = wav_file.getsampwidth()
         info.framerate = wav_file.getframerate()
         info.frames = wav_file.getnframes()
-
-        # conversion to float32 or [-1, 1] normalization
-        # https://stackoverflow.com/questions/16778878/python-write-a-wav-file-into-numpy-float-array
-        info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
-        info.samples = info.samples.astype(np.float32)
-        info.samples = info.samples / (2 ** 15)
+        #info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
+        info.samples = wav_file.readframes(info.frames)
         return info
 
     def write_audio(self, info):
@@ -35,7 +31,7 @@ class IO:
         return 0
 
     def play_audio(self, info):
-        info.samples = info.samples.tobytes()
+#        info.samples = info.samples.tobytes()
         p = pyaudio.PyAudio()
         stream = p.open(format=info.samplesize, channels=info.nchannels, rate=info.framerate, output=True)
         stream.write(info.samples)

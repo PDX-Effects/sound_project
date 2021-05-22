@@ -2,10 +2,14 @@ from i_o import IO
 from effects import Effects
 from frame import Frame
 import threading
+import pyaudio
 
 audio = IO()
 eff = Effects()
 info = Frame()
+
+def chorus_effect(frame_data):
+    eff.chorus(frame_data)
 
 
 def play(t_info):
