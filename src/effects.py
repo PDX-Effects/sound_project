@@ -19,6 +19,11 @@ class Effects:
       return info
 
     def flang(self, info):
+        #0-20 ms delay
+        delay = 10
+        buffer_size = info.sampwidth * delay * int(info.framerate/1000)
+        buffer = b'/0' * buffer_size
+        #function for effect: y(n) = x(n) + gx[n-M(n)]
         return info
 
     def phaser(self, info):
