@@ -7,12 +7,13 @@ class IO:
 
     def read_audio(self, info):
         wav_file = wv.open(info.filename)
-        info.samplesize = pyaudio.paFloat32
+        info.samplesize = pyaudio.paInt16 #for byte object use
+        #info.samplesize = pyaudio.paFloat32 for array use 
         info.nchannels = wav_file.getnchannels()
         info.sampwidth = wav_file.getsampwidth()
         info.framerate = wav_file.getframerate()
         info.frames = wav_file.getnframes()
-        #info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
+        #info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16) array use
         info.samples = wav_file.readframes(info.frames)
         return info
 

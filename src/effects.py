@@ -1,6 +1,8 @@
 from frame import Frame
 from audioop import add #allows us to add byte object audio signals together
 import numpy as np
+import math
+import itertools
 
 class Effects:
     def chorus(self, info): 
@@ -12,11 +14,16 @@ class Effects:
 
       info.samples = add(info.samples ,buffer + mod_signal,  info.sampwidth)
 #      info.samples = np.sin(bytearray(info.samples))
+      lfo_values = self.LFO(info) 
+      samples = [next(lfo_values) for i in range(info.framerate)]   #gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
+      #samples_obj = bytearray(samples)
+      return info; 
 
-      #add LFO
-
-      #modify amplitude of mod_signal?
-      return info
+    def LFO(self,info):  #returns a generator of a sin value at given step
+     freq = 20  #20hz hardcoded for LFO needs
+     step_size = (2* math.pi * freq )/info.framerate
+     for i in itertools.count(0, step_size): 
+       yield math.sin(i)
 
     def flang(self, info):
         return info
