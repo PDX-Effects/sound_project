@@ -44,6 +44,27 @@ class IO:
         info.samples = info.samples * 0.50
         return info
 
+    def chord_gen(self, info, base_freq = 440, time = 5, rate = 4800):
+        info.samplesize = pyaudio.paFloat32
+        info.nchannels = 1
+        info.sampwidth = 2
+        info.framerate = rate
+
+        first = []
+        third = []
+        fifth = []
+
+        first = (np.sin(2 * np.pi * np.arange(info.framerate * time) * base_freq / info.framerate)).astype(np.float32)
+        third = (np.sin(2 * np.pi * np.arange(info.framerate * time) * (base_freq * (5/4)) / info.framerate)).astype(np.float32)
+        fifth = (np.sin(2 * np.pi * np.arange(info.framerate * time) * (base_freq * (3/2)) / info.framerate)).astype(np.float32)
+        
+        info.samples = (first * 0.50) + (third * 0.50) + (fifth * 0.50)
+
+        #for i in range(len(info.samples)):
+        #    info.samples[i] = (first * 0.50) + (third * 0.50) + (fifth * 0.50)
+
+        return info
+
     def play_audio(self, info):
         play = info.samples.tobytes()
         p = pyaudio.PyAudio()

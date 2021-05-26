@@ -22,6 +22,7 @@ def menu():
     print("7.  Apply Phaser Effect. ")
     print("8.  Apply Delay Effect. ")
     print("9.  Apply Clipping Effect. ")
+    print("10. Create a Chord.")
     print("0.  Quit Program. ")
     print((width * 2 + 18) * "-")
     print()
@@ -118,6 +119,13 @@ if __name__ == "__main__":
                     eff.clipping(info, percent)
                 else:
                     print("Error: Improper Delay Value! ")
+            sleep(3)
+        elif choice == 10:
+            info.filename = input("Enter File Name: ")
+            if info.filename != '':
+                info = audio.chord_gen(info)
+            else:
+                print("Error: Filename not entered! ")
             sleep(3)
         elif choice == 0:
             print("Exiting Program! ")
