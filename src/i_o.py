@@ -33,7 +33,6 @@ class IO:
         wf.setframerate(info.framerate)
         wf.writeframes(save)
         wf.close()
-        info
         return 0
 
     def note_gen(self, info, freq=440, time=5, rate=48000):

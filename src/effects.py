@@ -1,7 +1,9 @@
-from audioop import add #allows us to add byte object audio signals together
+from audioop import add  # allows us to add byte object audio signals together
 import numpy as np
 import math
 import itertools
+from scipy import signal
+
 
 class Effects:
     def chorus(self, info, delay):
@@ -11,16 +13,18 @@ class Effects:
         info.samples = info.samples.tobytes()
 
         # 300 ms delay
-        #http://andrewslotnick.com/posts/audio-delay-with-python.html for buffersize help
-        buff_size = info.sampwidth * delay * int(info.framerate/1000)
-        buffer = b'\0' * buff_size # must use b for byte literal class for info.samples
+        # http://andrewslotnick.com/posts/audio-delay-with-python.html for buffersize help
+        buff_size = info.sampwidth * delay * int(info.framerate / 1000)
+        buffer = b'\0' * buff_size  # must use b for byte literal class for info.samples
         mod_signal = info.samples[:-buff_size]
 
-        info.samples = add(info.samples ,buffer + mod_signal,  info.sampwidth)
+        info.samples = add(info.samples, buffer + mod_signal, info.sampwidth)
         # info.samples = np.sin(bytearray(info.samples))
         lfo_values = self.LFO(info)
-        samples = [next(lfo_values) for i in range(info.framerate)]   #gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
-        #samples_obj = bytearray(samples)
+        samples = [next(lfo_values) for i in
+                   range(info.framerate)]  # gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
+        print(samples)
+        # samples_obj = bytearray(samples)
 
         # Convert from int16 buffer to float32 array
         info.samples = np.frombuffer(info.samples, dtype=np.int16)
@@ -28,14 +32,42 @@ class Effects:
         info.samples = info.samples / 32768
         return info
 
-    def LFO(self,info):  #returns a generator of a sin value at given step
-        freq = 20  #20hz hardcoded for LFO needs
-        step_size = (2* math.pi * freq )/info.framerate
-        for i in itertools.count(0, step_size):
-            yield math.sin(i)
+    def LFO(self, info, freq=20, amp=1, phase=0):  # returns a generator of a sin value at given step
+        # 20hz hardcoded for LFO needs
+        phase = (phase / 360) * 2 * np.pi
+        step_size = (2 * np.pi * freq) / info.framerate
+        return (np.sin(phase + i) * amp for i in itertools.count(start=0, step=step_size))
 
+    '''
+        def chorus(self, info, freq=1.0, dry=0.50, wet=0.50, delay=25.0, depth=1.0, phase=0.0):
+            mil = float(info.framerate) / 1000  # find frames per ms
+            delay *= mil  # Correct Delay to match framerate of sample
+            depth *= mil  # Same for depth
+            lfo = (np.sin(2 * np.pi * freq * np.arange(len(info.samples)) / info.framerate) +
+                   (phase * 2 * np.pi)) * depth + delay
+            samp = info.samples.copy()
+            for i in range(len(info.samples)):
+                index = int(i - lfo[i])
+                if 0 < index < len(info.samples):
+                    samp[i] = info.samples[i] * dry + info.samples[index] * wet  # Delay Feedback
+            info.samples = samp
+            return info'''
 
-    def flang(self, info):
+    # http://www.geofex.com/Article_Folders/phasers/phase.html
+    # https://www.dsprelated.com/freebooks/pasp/Time_Varying_Delay_Effects.html
+    # https://github.com/wybiral/python-musical/blob/master/musical/audio/effect.py
+    def flang(self, info, freq=1.0, dry=0.50, wet=0.50, delay=1.0, depth=20.0, phase=0.0):
+        mil = float(info.framerate) / 1000  # find frames per ms
+        delay *= mil  # Correct Delay to match framerate of sample
+        depth *= mil  # Same for depth
+        lfo = (np.sin(2 * np.pi * freq * np.arange(len(info.samples)) / info.framerate) +
+               (phase * 2 * np.pi)) * depth + delay
+        samp = info.samples
+        for i in range(len(info.samples)):
+            delay = int(i - lfo[i])
+            if 0 < delay < len(info.samples):
+                samp[i] = samp[i] * dry + samp[delay] * wet  # Delay Feedback
+        info.samples = samp
         return info
 
     def phaser(self, info):
@@ -59,7 +91,6 @@ class Effects:
         info.samples = info.samples / 32768
         return info
 
-
     def clipping(self, info, percent):
         info.samples = info.samples * 32768
         info.samples = info.samples.astype(np.int16)
@@ -75,4 +106,3 @@ class Effects:
 
     def mix_audio(self, source_one, amp_one, source_two, amp_two):
         return source_one * amp_one + source_two * amp_two
-

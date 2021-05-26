@@ -28,7 +28,8 @@ def menu():
 
 
 if __name__ == "__main__":
-    info.filename = ''
+    info.filename = 'gc.wav'
+    info = audio.read_audio(info)
     ctrl = True
     while ctrl:
         menu()
