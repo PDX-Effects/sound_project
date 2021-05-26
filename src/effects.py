@@ -15,8 +15,10 @@ class Effects:
       info.samples = add(info.samples ,buffer + mod_signal,  info.sampwidth)
 #      info.samples = np.sin(bytearray(info.samples))
       lfo_values = self.LFO(info) 
-      samples = [next(lfo_values) for i in range(info.framerate)]   #gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
+      samples = [next(lfo_values) for i in range(info.framerate)]   #list every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
       #samples_obj = bytearray(samples)
+      #print(info.samples)
+      #print(samples)
       return info; 
 
     def LFO(self,info):  #returns a generator of a sin value at given step
