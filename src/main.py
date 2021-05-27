@@ -22,7 +22,7 @@ def menu():
     print("7.  Apply Phaser Effect. ")
     print("8.  Apply Delay Effect. ")
     print("9.  Apply Clipping Effect. ")
-    print("10. Create a Chord.")
+    print("10. Apply Tremolo Effect. ")
     print("0.  Quit Program. ")
     print((width * 2 + 18) * "-")
     print()
@@ -52,8 +52,11 @@ if __name__ == "__main__":
             sleep(3)
         elif choice == 2:
             info.filename = input("Enter File Name: ")
+            print("https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies")
+            song = input("Enter Song Line as Notes: ")
+            time = 1.0
             if info.filename != '':
-                info = audio.note_gen(info)
+                info = audio.song_gen(info, song, time)
             else:
                 print("Error: Filename not entered! ")
             sleep(3)
@@ -121,11 +124,11 @@ if __name__ == "__main__":
                     print("Error: Improper Delay Value! ")
             sleep(3)
         elif choice == 10:
-            info.filename = input("Enter File Name: ")
-            if info.filename != '':
-                info = audio.chord_gen(info)
+            if info.samples is None:
+                print("Error: Samples Not Present! ")
             else:
-                print("Error: Filename not entered! ")
+                print("Applying: Tremolo Effect! ")
+                eff.tremolo(info)
             sleep(3)
         elif choice == 0:
             print("Exiting Program! ")
