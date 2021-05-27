@@ -113,4 +113,5 @@ class Effects:
 
     def boost(self, info, rate=2):
         info.samples = info.samples * 2
+        info.samples = info.samples.astype(np.float32)
         return info
