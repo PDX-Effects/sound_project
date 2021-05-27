@@ -104,5 +104,14 @@ class Effects:
         info.samples = info.samples / 32768
         return info
 
-    def mix_audio(self, source_one, amp_one, source_two, amp_two):
-        return source_one * amp_one + source_two * amp_two
+    # https://github.com/wybiral/python-musical/blob/master/musical/audio/effect.py
+    def tremolo(self, info, freq=5, dry=0.50, wet=0.50):
+        lfo = (np.sin(2 * np.pi * freq * np.arange(len(info.samples)) / info.framerate))
+        samp = info.samples * dry + (info.samples * lfo) * wet
+        info.samples = samp.astype(np.float32)
+        return info
+
+    def boost(self, info, rate=2):
+        info.samples = info.samples * 2
+        info.samples = info.samples.astype(np.float32)
+        return info
