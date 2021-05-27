@@ -3,6 +3,7 @@ from effects import Effects
 from frame import Frame
 from time import sleep
 import matplotlib.pyplot as plt
+import numpy as np
 
 audio = IO()
 eff = Effects()
@@ -11,9 +12,11 @@ info.filename = "gc.wav"
 info = audio.read_audio(info)
 
 def view_wave(info):
+    times = np.arange(len(info.samples))/info.framerate
+    plt.axis([None, None, -1.0, 1.0])
     plt.ylabel("Amplitude (Float32)")
-    plt.plot(info.samples)
-    plt.xlabel("Time (Rate * Duration)")
+    plt.plot(times, info.samples)
+    plt.xlabel("Time (s)")
     plt.title(info.filename)
     plt.show()
 
