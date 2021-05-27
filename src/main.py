@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 audio = IO()
 eff = Effects()
 info = Frame()
+info.filename = "gc.wav"
+info = audio.read_audio(info)
 
 def view_wave(info):
     plt.ylabel("Amplitude (Float32)")
