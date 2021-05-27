@@ -42,20 +42,6 @@ class IO:
 
     def song_gen(self, info, notes, time, rate=48000):
 
-        info.samplesize = pyaudio.paFloat32
-        info.nchannels = 1
-        info.sampwidth = 2
-        info.framerate = rate
-        song = notes.split(" ")
-        samp = []
-        for i in range(len(song)):
-            step_three = 4
-            step_five = 7
-            if 'm' in song[i]:
-                step_three -= 1
-                song[i] = song[i].replace('m', '')
-            samp = np.append(samp, self.chord_gen(info, self.midi_freq(key[song[i]]), float(time), step_three, step_five))
-        info.samples = samp.astype(np.float32)
         return info
 
     def chord_gen(self, info, base_freq=440, time=1.0, step_three=4, step_five=7, rate=48000):
