@@ -2,11 +2,18 @@ from i_o import IO
 from effects import Effects
 from frame import Frame
 from time import sleep
+import matplotlib.pyplot as plt
 
 audio = IO()
 eff = Effects()
 info = Frame()
 
+def view_wave(info):
+    plt.ylabel("Amplitude (Float32)")
+    plt.plot(info.samples)
+    plt.xlabel("Time (Rate * Duration)")
+    plt.title(info.filename)
+    plt.show()
 
 def main_menu(info, width=50):
     ctrl = True
@@ -54,7 +61,8 @@ def file_menu(info, width):
     print("1.  Load A File. ")
     print("2.  Create A File. ")
     print("3.  Play A File. ")
-    print("4.  Save A File. ")
+    print("4.  View A File. ")
+    print("5.  Save A File. ")
     print((width * 2 + 18) * "-")
     print()
     try:
@@ -88,6 +96,12 @@ def file_menu(info, width):
             print("Playing " + info.filename + '! ')
             audio.play_audio(info)
     elif choice == 4:
+        if info.samples is None:
+            print("Error: File Not Present! ")
+        else:
+            print("Viewing " + info.filename + '! ')
+            view_wave(info)
+    elif choice == 5:
         if info.filename == '':
             print("Error: File Not Present! ")
         elif info.samples is None:
