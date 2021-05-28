@@ -6,19 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-audio = IO()
-eff = Effects()
-
-
-def view_wave(info):
-    times = np.arange(len(info.samples)) / info.framerate
-    plt.axis([None, None, -1.0, 1.0])
-    plt.ylabel("Amplitude (Float32)")
-    plt.plot(times, info.samples)
-    plt.xlabel("Time (s)")
-    plt.title(info.filename)
-    plt.show()
-
 
 def print_filename(info, width):
     file_name = " Filename: " + info.filename + " "
@@ -26,7 +13,7 @@ def print_filename(info, width):
     print(half_file * " " + file_name + half_file * " ")
 
 
-def main_menu(info, width):
+def main_menu(info, audio, eff, width):
     ctrl = True
     title = " 80S EFFECTS MENU "
     half = int((width - len(title)) / 2) - 1
@@ -48,17 +35,17 @@ def main_menu(info, width):
             print("Error: Incorrect Value!")
             choice = -1
         if choice == 1:
-            info = file_menu(info, width)
+            info = file_menu(info, audio, width)
         elif choice == 2:
-            info = mod_menu(info, width)
+            info = mod_menu(info, eff, width)
         elif choice == 3:
-            info = time_menu(info, width)
+            info = time_menu(info, eff, width)
         elif choice == 4:
-            info = spec_menu(info, width)
+            info = spec_menu(info, eff, width)
         elif choice == 5:
-            info = dynamic_menu(info, width)
+            info = dynamic_menu(info, eff, width)
         elif choice == 6:
-            info = filter_menu(info, width)
+            info = filter_menu(info, eff, width)
         elif choice == 0:
             print("Exiting Program! ")
             ctrl = False
@@ -68,7 +55,17 @@ def main_menu(info, width):
     return info
 
 
-def file_menu(info, width):
+def view_wave(info):
+    times = np.arange(len(info.samples)) / info.framerate
+    plt.axis([None, None, -1.0, 1.0])
+    plt.ylabel("Amplitude (Float32)")
+    plt.plot(times, info.samples)
+    plt.xlabel("Time (s)")
+    plt.title(info.filename)
+    plt.show()
+
+
+def file_menu(info, audio, width):
     title = " 80S FILE MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
@@ -127,7 +124,7 @@ def file_menu(info, width):
     return info
 
 
-def mod_menu(info, width):
+def mod_menu(info, eff, width):
     title = " 80S MODULATION MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
@@ -174,7 +171,7 @@ def mod_menu(info, width):
     return info
 
 
-def time_menu(info, width):
+def time_menu(info, eff, width):
     title = " 80S TIME-BASED MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
@@ -212,7 +209,7 @@ def time_menu(info, width):
     return info
 
 
-def spec_menu(info, width):
+def spec_menu(info, eff, width):
     title = " 80S SPECTRAL MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
@@ -239,7 +236,7 @@ def spec_menu(info, width):
     return info
 
 
-def dynamic_menu(info, width):
+def dynamic_menu(info, eff, width):
     title = " 80S DYNAMIC MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half) * "-")
@@ -288,11 +285,15 @@ def dynamic_menu(info, width):
     return info
 
 
-def filter_menu(info, width):
+def filter_menu(info, eff, width):
     title = " 80S FILTERS MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half) * "-")
     print_filename(info, width)
+    print("1.   ")
+    print("2.   ")
+    print("3.   ")
+    print("4.   ")
     print((width - 2) * "-")
     print()
     try:
@@ -312,10 +313,12 @@ if __name__ == "__main__":
         t_size = [50, 50]
     # Initialize Objects
     info_master = Frame()
+    audio_master = IO()
+    eff_master = Effects()
 
     # Place Code Here to Specifically Test Effect
     info_master.filename = "gc.wav"
-    info_master = audio.read_audio(info_master)
+    info_master = audio_master.read_audio(info_master)
 
     # End Of Testing Area
-    main_menu(info_master, t_size[0])
+    main_menu(info_master, audio_master, eff_master, t_size[0])
