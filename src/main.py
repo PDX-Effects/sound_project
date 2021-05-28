@@ -7,18 +7,20 @@ import numpy as np
 
 audio = IO()
 eff = Effects()
-info = Frame()
-info.filename = "gc.wav"
-info = audio.read_audio(info)
+info_master = Frame()
+info_master.filename = "gc.wav"
+info_master = audio.read_audio(info_master)
+
 
 def view_wave(info):
-    times = np.arange(len(info.samples))/info.framerate
+    times = np.arange(len(info.samples)) / info.framerate
     plt.axis([None, None, -1.0, 1.0])
     plt.ylabel("Amplitude (Float32)")
     plt.plot(times, info.samples)
     plt.xlabel("Time (s)")
     plt.title(info.filename)
     plt.show()
+
 
 def main_menu(info, width=50):
     ctrl = True
@@ -138,7 +140,7 @@ def mod_menu(info, width):
             delay = int(input("Enter Delay in Milliseconds: "))
             if delay > 0:
                 print("Applying: Chorus Effect! ")
-                eff.chorus(info, delay)
+                info = eff.chorus(info, delay)
             else:
                 print("Error: Improper Delay Value! ")
     elif choice == 2:
@@ -146,19 +148,19 @@ def mod_menu(info, width):
             print("Error: Samples Not Present! ")
         else:
             print("Applying: Tremolo Effect! ")
-            eff.tremolo(info)
+            info = eff.tremolo(info)
     elif choice == 3:
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
             print("Applying: Flang Effect! ")
-            eff.flang(info)
+            info = eff.flang(info)
     elif choice == 4:
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
             print("Applying: Phaser Effect! ")
-            eff.phaser(info)
+            info = eff.phaser(info)
     return info
 
 
@@ -187,7 +189,7 @@ def time_menu(info, width):
             delay = int(input("Enter Delay in Milliseconds: "))
             if delay > 0:
                 print("Applying: Delay Effect! ")
-                eff.delay(info, delay)
+                info = eff.delay(info, delay)
             else:
                 print("Error: Improper Delay Value! ")
     elif choice == 3:
@@ -254,7 +256,7 @@ def dynamic_menu(info, width):
             percent = float(input("Enter % to Clip in Range of 0.1 and 1.00: "))
             if 0.10 <= percent <= 1.00:
                 print("Applying: Clipping Effect! ")
-                eff.clipping(info, percent)
+                info = eff.clipping(info, percent)
             else:
                 print("Error: Improper Delay Value! ")
     elif choice == 4:
@@ -264,7 +266,7 @@ def dynamic_menu(info, width):
             gain = float(input("Enter % to Gain in Range of 1.00+: "))
             if 1.00 <= gain:
                 print("Applying: Gain Effect! ")
-                eff.boost(info, gain)
+                info = eff.boost(info, gain)
             else:
                 print("Error: Improper Gain Value! ")
     return info
@@ -284,4 +286,4 @@ def filter_menu(info, width):
 
 
 if __name__ == "__main__":
-    main_menu(info)
+    main_menu(info_master)
