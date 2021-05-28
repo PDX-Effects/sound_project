@@ -1,10 +1,13 @@
+# Python Imports
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+
+# Project Imports
 from i_o import IO
 from effects import Effects
 from frame import Frame
 from time import sleep
-import matplotlib.pyplot as plt
-import numpy as np
-import os
 
 
 def print_filename(info, width):
@@ -265,6 +268,7 @@ def dynamic_menu(info, eff, width):
     print("2.  Planned: Apply Distortion Effect. ")
     print("3.  Apply Clipping Effect. ")
     print("4.  Apply Gain Effect. ")
+    print("5.  Apply Loss Effect. ")
     print((width - 2) * "-")
     print()
     try:
@@ -299,9 +303,19 @@ def dynamic_menu(info, eff, width):
             gain = float(input("Enter % to Gain in Range of 1.00+: "))
             if 1.00 <= gain:
                 print("Applying: Gain Effect! ")
-                info = eff.boost(info, gain)
+                info = eff.change_amp_rate(info, gain)
             else:
                 print("Error: Improper Gain Value! ")
+    elif choice == 5:
+        if info.samples is None:
+            print("Error: Samples Not Present! ")
+        else:
+            loss = float(input("Enter % to Lose in Range of 0.0 to 1.00: "))
+            if 0.0 < loss <= 1.0:
+                print("Applying: Gain Effect! ")
+                info = eff.change_amp_rate(info, loss)
+            else:
+                print("Error: Improper Loss Value! ")
     return info
 
 

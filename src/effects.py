@@ -69,25 +69,17 @@ class Effects:
         info.samples = samp
         return info
 
-    def phaser(self, info):
+    def phaser(self, info, dry=0.50, wet=0.50):
         return info
 
-    def delay(self, info, delay):
-        # Convert from float32 array to int16 buffer
-        info.samples = info.samples * 32768
-        info.samples = info.samples.astype(np.int16)
-        info.samples = info.samples.tobytes()
-
+    def delay(self, info, delay, dry=0.50, wet=0.50):
         # http://andrewslotnick.com/posts/audio-delay-with-python.html for buffersize help
-        buff_size = info.sampwidth * delay * int(info.framerate / 1000)
-        buffer = b'\0' * buff_size  # must use b for byte literal class for info.samples
+        buff_size = delay * int(info.framerate / 1000)
+        buffer = np.zeros(buff_size)  # must use b for byte literal class for info.samples
         mod_signal = info.samples[:-buff_size]
-        info.samples = add(info.samples, buffer + mod_signal, info.sampwidth)
-
-        # Convert from int16 buffer to float32 array
-        info.samples = np.frombuffer(info.samples, dtype=np.int16)
+        mod_signal = np.append(buffer, mod_signal)
+        info.samples = (info.samples * dry) + (mod_signal * wet)
         info.samples = info.samples.astype(np.float32)
-        info.samples = info.samples / 32768
         return info
 
     def clipping(self, info, percent):
@@ -110,7 +102,7 @@ class Effects:
         info.samples = samp.astype(np.float32)
         return info
 
-    def boost(self, info, rate=2):
-        info.samples = info.samples * 2
+    def change_amp_rate(self, info, rate=1.0):
+        info.samples = info.samples * rate
         info.samples = info.samples.astype(np.float32)
         return info
