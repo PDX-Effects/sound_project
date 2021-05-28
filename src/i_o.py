@@ -8,7 +8,7 @@ from key_dict import just_ratios
 class IO:
     def read_audio(self, info):
         try:
-            wav_file = wv.open(info.filename)
+            wav_file = wv.open("sound_files\\" + info.filename + ".wav")
         except FileNotFoundError:
             info.samples = None
             return info
@@ -29,7 +29,7 @@ class IO:
         save = save.tobytes()
 
         # writing to file
-        wf = wv.open(str("new_" + info.filename), 'wb')
+        wf = wv.open(str("sound_files\\" + "edited_" + info.filename + ".wav"), 'wb')
         wf.setnchannels(info.nchannels)
         wf.setsampwidth(2)  # 1 byte = 8bits so 2 byte = 16 bits
         wf.setframerate(info.framerate)
@@ -42,6 +42,11 @@ class IO:
 
     def song_gen(self, info, notes, time, rate=48000):
 
+        return info
+
+    def audio_append(self, info, new_add, times=1):
+        for t in range(times):
+            info.samples = np.append(info.samples, new_add)
         return info
 
     def chord_gen(self, info, base_freq=440, time=1.0, step_three=4, step_five=7, rate=48000):

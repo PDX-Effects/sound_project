@@ -66,15 +66,23 @@ def view_wave(info):
 
 
 def file_menu(info, audio, width):
+    sounds = list()
+    for root, dirs, files in os.walk("sound_files"):
+        for file in files:
+            if file.endswith(".wav"):
+                sounds.append(file.replace('.wav', ''))
+
     title = " 80S FILE MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
     print_filename(info, width)
+
     print("1.  Load A File. ")
     print("2.  Create A File. ")
     print("3.  Play A File. ")
     print("4.  View A File. ")
     print("5.  Save A File. ")
+    print("6.  Append A File. ")
     print((width - 2) * "-")
     print()
     try:
@@ -84,6 +92,10 @@ def file_menu(info, audio, width):
         choice = -1
 
     if choice == 1:
+        print("\nList of Files in Sound Directory: ")
+        for s in sounds:
+            print(s)
+        print()
         info.filename = input("Enter File Name: ")
         if info.filename != '':
             info = audio.read_audio(info)
@@ -119,8 +131,16 @@ def file_menu(info, audio, width):
         elif info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Audio Written to new_" + info.filename + "! ")
+            print("Audio Written to edited_" + info.filename + "! ")
             audio.write_audio(info)
+    elif choice == 6:
+        if info.filename == '':
+            print("Error: File Not Present! ")
+        elif info.samples is None:
+            print("Error: Samples Not Present! ")
+        else:
+            times = input("Enter How Many Times to Append: ")
+            info = audio.audio_append(info, info.samples, 3)
     return info
 
 
@@ -317,7 +337,7 @@ if __name__ == "__main__":
     eff_master = Effects()
 
     # Place Code Here to Specifically Test Effect
-    info_master.filename = "gc.wav"
+    info_master.filename = "gc"
     info_master = audio_master.read_audio(info_master)
 
     # End Of Testing Area
