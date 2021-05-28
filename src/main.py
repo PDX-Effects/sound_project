@@ -4,12 +4,10 @@ from frame import Frame
 from time import sleep
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 audio = IO()
 eff = Effects()
-info_master = Frame()
-info_master.filename = "gc.wav"
-info_master = audio.read_audio(info_master)
 
 
 def view_wave(info):
@@ -22,11 +20,19 @@ def view_wave(info):
     plt.show()
 
 
-def main_menu(info, width=50):
+def print_filename(info, width):
+    file_name = " Filename: " + info.filename + " "
+    half_file = int((width - len(file_name)) / 2) - 1
+    print(half_file * " " + file_name + half_file * " ")
+
+
+def main_menu(info, width):
     ctrl = True
+    title = " 80S EFFECTS MENU "
+    half = int((width - len(title)) / 2) - 1
     while ctrl:
-        print(width * "-", "80S EFFECTS MENU", width * "-")
-        print(width * " ", "Filename: " + info.filename)
+        print(half * "-" + title + half * "-")
+        print_filename(info, width)
         print("1.  File Menu. ")
         print("2.  Modulation Effects Menu. ")
         print("3.  Time-Based Effects Menu. ")
@@ -34,7 +40,7 @@ def main_menu(info, width=50):
         print("5.  Dynamic Effects Menu. ")
         print("6.  Filters Menu. ")
         print("0.  Quit Program. ")
-        print((width * 2 + 18) * "-")
+        print((width - 2) * "-")
         print()
         try:
             choice = int(input("Enter Choice: "))
@@ -63,14 +69,16 @@ def main_menu(info, width=50):
 
 
 def file_menu(info, width):
-    print(width * "-", "80S File MENU", (width + 3) * "-")
-    print(width * " ", "Filename: " + info.filename)
+    title = " 80S FILE MENU "
+    half = int((width - len(title)) / 2) - 1
+    print(half * "-" + title + (half + 1) * "-")
+    print_filename(info, width)
     print("1.  Load A File. ")
     print("2.  Create A File. ")
     print("3.  Play A File. ")
     print("4.  View A File. ")
     print("5.  Save A File. ")
-    print((width * 2 + 18) * "-")
+    print((width - 2) * "-")
     print()
     try:
         choice = int(input("Enter Choice: "))
@@ -120,13 +128,15 @@ def file_menu(info, width):
 
 
 def mod_menu(info, width):
-    print(width * "-", "80S MODULATION MENU", (width - 3) * "-")
-    print(width * " ", "Filename: " + info.filename)
+    title = " 80S MODULATION MENU "
+    half = int((width - len(title)) / 2) - 1
+    print(half * "-" + title + (half + 1) * "-")
+    print_filename(info, width)
     print("1.  Apply Chorus Effect. ")
     print("2.  Apply Tremolo Effect. ")
     print("3.  Apply Flanger Effect. ")
     print("4.  Apply Phaser Effect. ")
-    print((width * 2 + 18) * "-")
+    print((width - 2) * "-")
     print()
     try:
         choice = int(input("Enter Choice: "))
@@ -165,12 +175,14 @@ def mod_menu(info, width):
 
 
 def time_menu(info, width):
-    print(width * "-", "80S TIME-BASED MENU", (width - 3) * "-")
-    print(width * " ", "Filename: " + info.filename)
+    title = " 80S TIME-BASED MENU "
+    half = int((width - len(title)) / 2) - 1
+    print(half * "-" + title + (half + 1) * "-")
+    print_filename(info, width)
     print("1.  Planned: Apply Reverb Effect. ")
     print("2.  Apply Delay Effect. ")
     print("3.  Planned: Apply Echo Effect. ")
-    print((width * 2 + 18) * "-")
+    print((width - 2) * "-")
     print()
     try:
         choice = int(input("Enter Choice: "))
@@ -201,11 +213,13 @@ def time_menu(info, width):
 
 
 def spec_menu(info, width):
-    print(width * "-", "80S SPECTRAL MENU", (width - 1) * "-")
-    print(width * " ", "Filename: " + info.filename)
+    title = " 80S SPECTRAL MENU "
+    half = int((width - len(title)) / 2) - 1
+    print(half * "-" + title + (half + 1) * "-")
+    print_filename(info, width)
     print("1.  Planned: Apply EQ Effect. ")
     print("2.  Planned: Apply Panning Effect. ")
-    print((width * 2 + 18) * "-")
+    print((width - 2) * "-")
     print()
     try:
         choice = int(input("Enter Choice: "))
@@ -226,13 +240,15 @@ def spec_menu(info, width):
 
 
 def dynamic_menu(info, width):
-    print(width * "-", "80S DYNAMIC MENU", width * "-")
-    print(width * " ", "Filename: " + info.filename)
+    title = " 80S DYNAMIC MENU "
+    half = int((width - len(title)) / 2) - 1
+    print(half * "-" + title + (half) * "-")
+    print_filename(info, width)
     print("1.  Planned: Apply Compression Effect. ")
     print("2.  Planned: Apply Distortion Effect. ")
     print("3.  Apply Clipping Effect. ")
     print("4.  Apply Gain Effect. ")
-    print((width * 2 + 18) * "-")
+    print((width - 2) * "-")
     print()
     try:
         choice = int(input("Enter Choice: "))
@@ -273,9 +289,11 @@ def dynamic_menu(info, width):
 
 
 def filter_menu(info, width):
-    print(width * "-", "80S FILTERS MENU", width * "-")
-    print(width * " ", "Filename: " + info.filename)
-    print((width * 2 + 18) * "-")
+    title = " 80S FILTERS MENU "
+    half = int((width - len(title)) / 2) - 1
+    print(half * "-" + title + (half) * "-")
+    print_filename(info, width)
+    print((width - 2) * "-")
     print()
     try:
         choice = int(input("Enter Choice: "))
@@ -286,4 +304,18 @@ def filter_menu(info, width):
 
 
 if __name__ == "__main__":
-    main_menu(info_master)
+    try:
+        t_size = os.get_terminal_size()
+    except OSError:
+        t_size = [50, 50]
+    except ValueError:
+        t_size = [50, 50]
+    # Initialize Objects
+    info_master = Frame()
+
+    # Place Code Here to Specifically Test Effect
+    info_master.filename = "gc.wav"
+    info_master = audio.read_audio(info_master)
+
+    # End Of Testing Area
+    main_menu(info_master, t_size[0])
