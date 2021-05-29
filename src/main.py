@@ -103,7 +103,6 @@ def file_menu(info, audio, width):
         if info.filename != '':
             info = audio.read_audio(info)
             if info.samples is None:
-                info.filename = ''
                 print("Error: File Not Present! ")
         else:
             print("Error: Filename not entered! ")
@@ -143,7 +142,7 @@ def file_menu(info, audio, width):
             print("Error: Samples Not Present! ")
         else:
             times = input("Enter How Many Times to Append: ")
-            info = audio.audio_append(info, info.samples, 3)
+            info = audio.audio_append(info, info.samples, int(times))
     return info
 
 
@@ -170,7 +169,7 @@ def mod_menu(info, eff, width):
             delay = int(input("Enter Delay in Milliseconds: "))
             if delay > 0:
                 print("Applying: Chorus Effect! ")
-                info = eff.chorus(info, delay)
+                info = eff.chorus(info, 1.0, 0.50, 0.50, delay, 1.0, 0.0)
             else:
                 print("Error: Improper Delay Value! ")
     elif choice == 2:
@@ -183,7 +182,7 @@ def mod_menu(info, eff, width):
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Applying: Flang Effect! ")
+            print("Applying: Flanger Effect! ")
             info = eff.flang(info)
     elif choice == 4:
         if info.samples is None:
@@ -262,7 +261,7 @@ def spec_menu(info, eff, width):
 def dynamic_menu(info, eff, width):
     title = " 80S DYNAMIC MENU "
     half = int((width - len(title)) / 2) - 1
-    print(half * "-" + title + (half) * "-")
+    print(half * "-" + title + half * "-")
     print_filename(info, width)
     print("1.  Planned: Apply Compression Effect. ")
     print("2.  Planned: Apply Distortion Effect. ")
@@ -322,7 +321,7 @@ def dynamic_menu(info, eff, width):
 def filter_menu(info, eff, width):
     title = " 80S FILTERS MENU "
     half = int((width - len(title)) / 2) - 1
-    print(half * "-" + title + (half) * "-")
+    print(half * "-" + title + half * "-")
     print_filename(info, width)
     print("1.   ")
     print("2.   ")
