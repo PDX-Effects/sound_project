@@ -5,7 +5,6 @@ from scipy import signal
 
 
 class Effects:
-    '''
     def chorus(self, info, delay):
         # Convert from float32 array to int16 buffer
         info.samples = info.samples * 32768
@@ -36,23 +35,24 @@ class Effects:
         phase = (phase / 360) * 2 * np.pi
         step_size = (2 * np.pi * freq) / info.framerate
         return (np.sin(phase + i) * amp for i in itertools.count(start=0, step=step_size))
-'''
-'''
-    def chorus(self, info, freq=1.0, dry=0.50, wet=0.50, delay=25.0, depth=1.0, phase=0.0):
-        mil = float(info.framerate) / 1000  # find frames per ms
-        delay *= mil  # Correct Delay to match framerate of sample
-        depth *= mil  # Same for depth
-        lfo = (np.sin(2 * np.pi * freq * np.arange(len(info.samples)) / info.framerate) +
-                   (phase * 2 * np.pi)) * depth + delay
-        samp = info.samples.copy()
-        for i in range(len(info.samples)):
-            index = int(i - lfo[i])
-            if 0 < index < len(info.samples):
-                samp[i] = info.samples[i] * dry + info.samples[index] * wet  # Delay Feedback
-        info.samples = info.samples.astype(np.float32)
-        info.samples = samp
-        return info
-'''
+
+    '''
+        def chorus(self, info, freq=1.0, dry=0.50, wet=0.50, delay=25.0, depth=1.0, phase=0.0):
+            mil = float(info.framerate) / 1000  # find frames per ms
+            delay *= mil  # Correct Delay to match framerate of sample
+            depth *= mil  # Same for depth
+            lfo = (np.sin(2 * np.pi * freq * np.arange(len(info.samples)) / info.framerate) +
+                       (phase * 2 * np.pi)) * depth + delay
+            samp = info.samples.copy()
+            for i in range(len(info.samples)):
+                index = int(i - lfo[i])
+                if 0 < index < len(info.samples):
+                    samp[i] = info.samples[i] * dry + info.samples[index] * wet  # Delay Feedback
+            info.samples = info.samples.astype(np.float32)
+            info.samples = samp
+            return info
+    '''
+
     # http://www.geofex.com/Article_Folders/phasers/phase.html
     # https://www.dsprelated.com/freebooks/pasp/Time_Varying_Delay_Effects.html
     # https://github.com/wybiral/python-musical/blob/master/musical/audio/effect.py
