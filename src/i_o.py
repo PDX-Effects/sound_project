@@ -1,6 +1,7 @@
 import wave as wv
 import numpy as np
 import pyaudio
+import os
 from key_dict import key
 from key_dict import just_ratios
 
@@ -12,7 +13,7 @@ class IO:
 
     def read_audio(self, info):
         try:
-            wav_file = wv.open("sound_files\\" + info.filename + ".wav")
+            wav_file = wv.open("sound_files" + os.path.sep + info.filename + ".wav")
             info.nchannels = wav_file.getnchannels()
             if info.nchannels == 1:
                 info.samplesize = pyaudio.paFloat32
@@ -39,7 +40,7 @@ class IO:
         save = save.tobytes()
 
         # writing to file
-        wf = wv.open(str("sound_files\\" + info.filename + ".wav"), 'wb')
+        wf = wv.open(str("sound_files" + os.path.sep + info.filename + ".wav"), 'wb')
         wf.setnchannels(info.nchannels)
         wf.setsampwidth(2)  # 1 byte = 8bits so 2 byte = 16 bits
         wf.setframerate(info.framerate)
