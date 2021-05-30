@@ -9,6 +9,8 @@ from effects import Effects
 from frame import Frame
 from time import sleep
 
+g_sleep = 1
+
 
 def print_filename(info, width):
     file_name = " Filename: " + info.filename + " "
@@ -16,11 +18,19 @@ def print_filename(info, width):
     print(half_file * " " + file_name + half_file * " ")
 
 
+def clear():
+    if os.name == 'nt':
+        _ = os.system('cls')
+    else:
+        _ = os.system('clear')
+
+
 def main_menu(info, audio, eff, width):
     ctrl = True
     title = " 80S EFFECTS MENU "
     half = int((width - len(title)) / 2) - 1
     while ctrl:
+        clear()
         print(half * "-" + title + half * "-")
         print_filename(info, width)
         print("1.  File Menu. ")
@@ -54,7 +64,7 @@ def main_menu(info, audio, eff, width):
             ctrl = False
         else:
             print("Error: Value Out of Bounds! ")
-        sleep(3)
+        sleep(g_sleep)
     return info
 
 
@@ -69,6 +79,7 @@ def view_wave(info):
 
 
 def file_menu(info, audio, width):
+    clear()
     sounds = list()
     for root, dirs, files in os.walk("sound_files"):
         for file in files:
@@ -133,8 +144,17 @@ def file_menu(info, audio, width):
         elif info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Audio Written to edited_" + info.filename + "! ")
-            audio.write_audio(info)
+            filename = input("Enter Name for File: ")
+            print(filename == info.filename)
+            over = True
+            if info.filename == filename:
+                dec = input("Overwrite Original File? (Y or N):")
+                if dec == 'N':
+                    over = False
+            if over:
+                info.filename = filename
+                print("Audio Written to " + info.filename + "! ")
+                audio.write_audio(info)
     elif choice == 6:
         if info.filename == '':
             print("Error: File Not Present! ")
@@ -147,6 +167,7 @@ def file_menu(info, audio, width):
 
 
 def mod_menu(info, eff, width):
+    clear()
     title = " 80S MODULATION MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
@@ -169,31 +190,58 @@ def mod_menu(info, eff, width):
             delay = int(input("Enter Delay in Milliseconds: "))
             if delay > 0:
                 print("Applying: Chorus Effect! ")
-                info = eff.chorus(info, 1.0, 0.50, 0.50, delay, 1.0, 0.0)
+                info = eff.chorus(info, delay)
             else:
                 print("Error: Improper Delay Value! ")
     elif choice == 2:
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Applying: Tremolo Effect! ")
-            info = eff.tremolo(info)
+            dec = input("Load Defaults? (Y or N): ")
+            if dec == 'Y':
+                info = eff.tremolo(info)
+                print("Applying: Tremolo Effect! ")
+            elif dec == 'N':
+                freq = int(input("Enter Frequency (Hz): "))
+                dry = float(input("Enter Dry Value: "))
+                wet = float(input("Enter Wet Value: "))
+                info = eff.tremolo(info, freq, dry, wet)
+                print("Applying: Tremolo Effect! ")
+
     elif choice == 3:
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Applying: Flanger Effect! ")
-            info = eff.flang(info)
+            dec = input("Load Defaults? (Y or N): ")
+            if dec == 'Y':
+                info = eff.flang(info)
+                print("Applying: Flanger Effect! ")
+            elif dec == 'N':
+                freq = int(input("Enter Frequency (Hz): "))
+                dry = float(input("Enter Dry Value: "))
+                wet = float(input("Enter Wet Value: "))
+                delay = float(input("Enter Delay Value: "))
+                depth = float(input("Enter Depth Value: "))
+                phase = float(input("Enter Phase Value: "))
+                info = eff.flang(info, freq, dry, wet, delay, depth, phase)
+                print("Applying: Flanger Effect! ")
+
     elif choice == 4:
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Applying: Phaser Effect! ")
-            info = eff.phaser(info)
+            dec = input("Load Defaults? (Y or N): ")
+            if dec == 'Y':
+                info = eff.phaser(info)
+                print("Applying: Phaser Effect! ")
+            elif dec == 'N':
+                info = eff.phaser(info)
+                print("Applying: Flanger Effect! ")
     return info
 
 
 def time_menu(info, eff, width):
+    clear()
     title = " 80S TIME-BASED MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
@@ -217,12 +265,19 @@ def time_menu(info, eff, width):
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            delay = int(input("Enter Delay in Milliseconds: "))
-            if delay > 0:
+            dec = input("Load Defaults? (Y or N): ")
+            if dec == 'Y':
+                info = eff.delay(info)
                 print("Applying: Delay Effect! ")
-                info = eff.delay(info, delay)
-            else:
-                print("Error: Improper Delay Value! ")
+            elif dec == 'N':
+                delay = int(input("Enter Delay in Milliseconds: "))
+                dry = float(input("Enter Dry Value: "))
+                wet = float(input("Enter Wet Value: "))
+                if delay > 0:
+                    info = eff.delay(info, delay, dry, wet)
+                    print("Applying: Delay Effect! ")
+                else:
+                    print("Error: Improper Delay Value! ")
     elif choice == 3:
         if info.samples is None:
             print("Error: Samples Not Present! ")
@@ -232,6 +287,7 @@ def time_menu(info, eff, width):
 
 
 def spec_menu(info, eff, width):
+    clear()
     title = " 80S SPECTRAL MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
@@ -259,6 +315,7 @@ def spec_menu(info, eff, width):
 
 
 def dynamic_menu(info, eff, width):
+    clear()
     title = " 80S DYNAMIC MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + half * "-")
@@ -319,6 +376,7 @@ def dynamic_menu(info, eff, width):
 
 
 def filter_menu(info, eff, width):
+    clear()
     title = " 80S FILTERS MENU "
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + half * "-")
@@ -350,7 +408,7 @@ if __name__ == "__main__":
     eff_master = Effects()
 
     # Place Code Here to Specifically Test Effect
-    info_master.filename = "gc"
+    info_master.filename = 'gc'
     info_master = audio_master.read_audio(info_master)
 
     # End Of Testing Area

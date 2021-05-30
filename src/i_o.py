@@ -39,7 +39,7 @@ class IO:
         save = save.tobytes()
 
         # writing to file
-        wf = wv.open(str("sound_files\\" + "edited_" + info.filename + ".wav"), 'wb')
+        wf = wv.open(str("sound_files\\" + info.filename + ".wav"), 'wb')
         wf.setnchannels(info.nchannels)
         wf.setsampwidth(2)  # 1 byte = 8bits so 2 byte = 16 bits
         wf.setframerate(info.framerate)

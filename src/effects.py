@@ -60,8 +60,8 @@ class Effects:
         mil = float(info.framerate) / 1000  # find frames per ms
         delay *= mil  # Correct Delay to match framerate of sample
         depth *= mil  # Same for depth
-        lfo = (np.sin(2 * np.pi * freq * np.arange(len(info.samples)) / info.framerate) +
-               (phase * 2 * np.pi)) * depth + delay
+        lfo = ((np.sin(2 * np.pi * freq * (np.arange(len(info.samples)) / info.framerate)) +
+               (phase * 2 * np.pi))) * depth + delay
         samp = info.samples
         for i in range(len(info.samples)):
             delay = int(i - lfo[i])
@@ -73,7 +73,7 @@ class Effects:
     def phaser(self, info, dry=0.50, wet=0.50):
         return info
 
-    def delay(self, info, delay, dry=0.50, wet=0.50):
+    def delay(self, info, delay=100, dry=0.50, wet=0.50):
         # http://andrewslotnick.com/posts/audio-delay-with-python.html for buffersize help
         buff_size = delay * int(info.framerate / 1000)
         buffer = np.zeros(buff_size)  # must use b for byte literal class for info.samples
