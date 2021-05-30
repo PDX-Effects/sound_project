@@ -11,9 +11,9 @@ class IO:
     mix_rate = 0.50
     base_freq = 440
 
-    def read_audio(self, info):
+    def read_audio(self, info, path):
         try:
-            wav_file = wv.open("sound_files" + os.path.sep + info.filename + ".wav")
+            wav_file = wv.open(path + os.path.sep + info.filename + ".wav")
             info.nchannels = wav_file.getnchannels()
             if info.nchannels == 1:
                 info.samplesize = pyaudio.paFloat32
@@ -33,14 +33,14 @@ class IO:
             info.samples = None
         return info
 
-    def write_audio(self, info):
+    def write_audio(self, info, path):
         # conversion to int16 and normalizing amplitude at 50% volume for pyaudio to process
         save = info.samples * self.max_amp
         save = save.astype(np.int16)
         save = save.tobytes()
 
         # writing to file
-        wf = wv.open(str("sound_files" + os.path.sep + info.filename + ".wav"), 'wb')
+        wf = wv.open(path + os.path.sep + info.filename + ".wav", 'wb')
         wf.setnchannels(info.nchannels)
         wf.setsampwidth(2)  # 1 byte = 8bits so 2 byte = 16 bits
         wf.setframerate(info.framerate)

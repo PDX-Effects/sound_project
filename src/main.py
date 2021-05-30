@@ -10,6 +10,7 @@ from frame import Frame
 from time import sleep
 
 g_sleep = 1
+path = os.path.realpath(__file__).replace("main.py", '') + "sound_files"
 
 
 def print_filename(info, width):
@@ -81,7 +82,7 @@ def view_wave(info):
 def file_menu(info, audio, width):
     clear()
     sounds = list()
-    for root, dirs, files in os.walk("sound_files"):
+    for root, dirs, files in os.walk(path):
         for file in files:
             if file.endswith(".wav"):
                 sounds.append(file.replace('.wav', ''))
@@ -112,7 +113,7 @@ def file_menu(info, audio, width):
         print()
         info.filename = input("Enter File Name: ")
         if info.filename != '':
-            info = audio.read_audio(info)
+            info = audio.read_audio(info, path)
             if info.samples is None:
                 print("Error: File Not Present! ")
         else:
@@ -154,7 +155,7 @@ def file_menu(info, audio, width):
             if over:
                 info.filename = filename
                 print("Audio Written to " + info.filename + "! ")
-                audio.write_audio(info)
+                audio.write_audio(info, path)
     elif choice == 6:
         if info.filename == '':
             print("Error: File Not Present! ")
@@ -409,7 +410,7 @@ if __name__ == "__main__":
 
     # Place Code Here to Specifically Test Effect
     info_master.filename = 'gc'
-    info_master = audio_master.read_audio(info_master)
+    info_master = audio_master.read_audio(info_master, path)
 
     # End Of Testing Area
     main_menu(info_master, audio_master, eff_master, t_size[0])
