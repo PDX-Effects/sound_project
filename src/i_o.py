@@ -1,35 +1,46 @@
 import wave as wv
 import numpy as np
 import pyaudio
+import os
 from key_dict import key
 from key_dict import just_ratios
 
 
 class IO:
-    def read_audio(self, info):
+    max_amp = int(2**15)
+    mix_rate = 0.50
+    base_freq = 440
+
+    def read_audio(self, info, path):
         try:
-            wav_file = wv.open(info.filename)
+            wav_file = wv.open(path + os.path.sep + info.filename + ".wav")
+            info.nchannels = wav_file.getnchannels()
+            if info.nchannels == 1:
+                info.samplesize = pyaudio.paFloat32
+                info.nchannels = wav_file.getnchannels()
+                info.sampwidth = wav_file.getsampwidth()
+                info.framerate = wav_file.getframerate()
+                info.frames = wav_file.getnframes()
+                info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
+                info.samples = info.samples.astype(np.float32)
+                info.samples = info.samples / self.max_amp
+            else:
+                print("Error: Audio Channels Cannot Be: " + str(info.nchannels))
+                info.nchannels = 0
+                info.samples = None
         except FileNotFoundError:
+            info.filename = ''
             info.samples = None
-            return info
-        info.samplesize = pyaudio.paFloat32
-        info.nchannels = wav_file.getnchannels()
-        info.sampwidth = wav_file.getsampwidth()
-        info.framerate = wav_file.getframerate()
-        info.frames = wav_file.getnframes()
-        info.samples = np.frombuffer(wav_file.readframes(info.frames), dtype=np.int16)
-        info.samples = info.samples.astype(np.float32)
-        info.samples = info.samples / 32768
         return info
 
-    def write_audio(self, info):
+    def write_audio(self, info, path):
         # conversion to int16 and normalizing amplitude at 50% volume for pyaudio to process
-        save = info.samples * 32768
+        save = info.samples * self.max_amp
         save = save.astype(np.int16)
         save = save.tobytes()
 
         # writing to file
-        wf = wv.open(str("new_" + info.filename), 'wb')
+        wf = wv.open(path + os.path.sep + info.filename + ".wav", 'wb')
         wf.setnchannels(info.nchannels)
         wf.setsampwidth(2)  # 1 byte = 8bits so 2 byte = 16 bits
         wf.setframerate(info.framerate)
@@ -38,18 +49,39 @@ class IO:
         return 0
 
     def midi_freq(self, midi):
-        return 440 * 2 ** ((midi - 69) / 12)
+        return self.base_freq * 2 ** ((midi - 69) / 12)
 
     def song_gen(self, info, notes, time, rate=48000):
 
         return info
 
+    def audio_append(self, info, new_add, times=1, rate=0.25):
+        for t in range(times):
+            buff_size = int(info.framerate * rate)
+            # Get End of samples relative to buff_size
+            first = info.samples[-buff_size:]
+            print(first)
+            # Cut first out of samples
+            info.samples = info.samples[:-buff_size]
+            print(info.samples)
+            # Get beginning of new_add
+            last = new_add[:buff_size]
+            # Cut last out of new_add
+            new_add = new_add[buff_size:]
+            # Mix first and last.
+            buff_zone = (first * self.mix_rate) + (last * self.mix_rate)
+            # Append back together
+            info.samples = np.append(info.samples, buff_zone)
+            info.samples = np.append(info.samples, new_add)
+        return info
+
     def chord_gen(self, info, base_freq=440, time=1.0, step_three=4, step_five=7, rate=48000):
-        first = (np.sin(2 * np.pi * np.arange(rate * time) * base_freq / rate)).astype(np.float32)
-        third = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_three]) / rate)).astype(np.float32)
-        fifth = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_five]) / rate)).astype(np.float32)
+        first = (np.sin(2 * np.pi * np.arange(rate * time) * base_freq / rate))
+        third = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_three]) / rate))
+        fifth = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_five]) / rate))
 
         info.samples = (first * 0.33) + (third * 0.33) + (fifth * 0.33)
+        info.samples = info.samples.astype(np.float32)
         return info.samples
 
     def play_audio(self, info):
