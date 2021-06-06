@@ -173,7 +173,7 @@ def mod_menu(info, eff, width):
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
     print_filename(info, width)
-    print("1.  Apply Chorus Effect. (incomplete) ")
+    print("1.  Apply Chorus Effect. ")
     print("2.  Apply Tremolo Effect. ")
     print("3.  Apply Flanger Effect. ")
     print("4.  Apply Phaser Effect. ")
