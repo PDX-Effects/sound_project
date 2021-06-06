@@ -34,8 +34,7 @@ class Effects:
         step_size = (2 * np.pi * freq) / info.framerate
         return (np.sin(phase + i) * amp for i in itertools.count(start=0, step=step_size))
 
-    '''
-        def chorus(self, info, freq=1.0, dry=0.50, wet=0.50, delay=25.0, depth=1.0, phase=0.0):
+    def chorus(self, info,delay = 25.0, freq=1.0, dry=0.50, wet=0.50, depth=1.0, phase=0.0):
             mil = float(info.framerate) / 1000  # find frames per ms
             delay *= mil  # Correct Delay to match framerate of sample
             depth *= mil  # Same for depth
@@ -49,7 +48,6 @@ class Effects:
             info.samples = info.samples.astype(np.float32)
             info.samples = samp
             return info
-    '''
 
     # http://www.geofex.com/Article_Folders/phasers/phase.html
     # https://www.dsprelated.com/freebooks/pasp/Time_Varying_Delay_Effects.html
