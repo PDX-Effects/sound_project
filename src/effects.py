@@ -5,30 +5,28 @@ from scipy import signal
 
 
 class Effects:
-    def chorus(self, info, delay):
-        # Convert from float32 array to int16 buffer
+    def echo(self, info, delay):
+      # Convert from float32 array to int16 buffer
         info.samples = info.samples * 32768
         info.samples = info.samples.astype(np.int16)
         info.samples = info.samples.tobytes()
 
         # 300 ms delay
-        # http://andrewslotnick.com/posts/audio-delay-with-python.html for buffersize help
-        buff_size = info.sampwidth * delay * int(info.framerate / 1000)
-        buffer = b'\0' * buff_size  # must use b for byte literal class for info.samples
+        #http://andrewslotnick.com/posts/audio-delay-with-python.html for buffersize help
+        buff_size = info.sampwidth * 300 * int(info.framerate/1000)
+        buffer = b'\0' * buff_size # must use b for byte literal class for info.samples
         mod_signal = info.samples[:-buff_size]
 
-        info.samples = add(info.samples, buffer + mod_signal, info.sampwidth)
-        # info.samples = np.sin(bytearray(info.samples))
-        lfo_values = self.lfo(info)
-        samples = [next(lfo_values) for i in
-                   range(info.framerate)]  # gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
-        # samples_obj = bytearray(samples)
+        info.samples = add(info.samples ,buffer + mod_signal,  info.sampwidth)
+        #lfo_values = self.LFO(info)
+        #samples = [next(lfo_values) for i in range(info.framerate)]   #gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
 
         # Convert from int16 buffer to float32 array
         info.samples = np.frombuffer(info.samples, dtype=np.int16)
         info.samples = info.samples.astype(np.float32)
         info.samples = info.samples / 32768
         return info
+
 
     def lfo(self, info, freq=20, amp=1, phase=0):  # returns a generator of a sin value at given step
         # 20hz hardcoded for LFO needs
