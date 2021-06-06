@@ -16,14 +16,25 @@ class Effects:
         buff_size = info.sampwidth * delay * int(info.framerate / 1000)
         buffer = b'\0' * buff_size  # must use b for byte literal class for info.samples
         mod_signal = info.samples[:-buff_size]
-
-        info.samples = add(info.samples, buffer + mod_signal, info.sampwidth)
-        # info.samples = np.sin(bytearray(info.samples))
+        delayed = buffer + mod_signal 
+        
+#        info.samples = add(info.samples, buffer + mod_signal, info.sampwidth) 
         lfo_values = self.lfo(info)
-        samples = [next(lfo_values) for i in
-                   range(info.framerate)]  # gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
-        # samples_obj = bytearray(samples)
+        #samples = [next(lfo_values) for i in range(info.framerate)]  # gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
+        samples = np.array([next(lfo_values) for i in range(info.framerate)])  
+        
+        samples = samples * 32768
+        samples = samples.astype(np.int16)
+        samples = samples.tobytes()
+        
+        print(len(samples), "samples")
+        print(len(delayed), "delay")
+        modded = ''
+        for i in samples:
+            modded[i] = samples[i] + delayed[i]
+#        info.samples = add(samples, delay, info.sampwidth) 
 
+        info.samples = modded
         # Convert from int16 buffer to float32 array
         info.samples = np.frombuffer(info.samples, dtype=np.int16)
         info.samples = info.samples.astype(np.float32)
