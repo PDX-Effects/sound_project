@@ -11,7 +11,7 @@ py .\src\main.py
 
 From the main menu, first choose a sound file to manipulate (1.File Menu). Once chosen, you are redirected back to the main menu where you can choose a specific effects menu. Finally, head back to the file menu to play the file with the selected effects.
 
-**Testing:** 
+**Testing:**\ 
 A component of testing was using Audacity to confirm the waveforms reflect the effects intention and not just make a different noise. Audacity also helped when there was no audible output or confusing output, and you could rely on the visual waveforms to seek out the issue. From the users side, testing was done on the interface itself. Things such as invalid input and path choices were tested and error messages were added to guide users to the correct implementation of the project.  
  
 **What worked?**\
