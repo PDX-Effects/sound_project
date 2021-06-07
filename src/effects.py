@@ -69,13 +69,13 @@ class Effects:
         info.samples = samp
         return info
 
-    def phaser(self, info, dry=0.50, wet=0.50, passes = 1):
+    def phaser(self, info, dry=0.70, wet=0.30, passes = 1):
         y = info.samples
         b, a = signal.ellip(4, 0.01, 120, 0.125)
         for i in range(passes):
             y += (signal.filtfilt(b, a, y) * 0.5).astype(np.float32)
 
-        info.samples += (y * 0.5)
+        info.samples = (info.samples * dry) + (y * wet)
         return info
 
     def clipping(self, info, percent):
