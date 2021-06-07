@@ -69,14 +69,31 @@ class Effects:
         info.samples = samp
         return info
 
-    def phaser(self, info, dry=0.70, wet=0.30, passes = 1):
-        y = info.samples
-        b, a = signal.ellip(4, 0.01, 120, 0.125)
-        for i in range(passes):
-            y += (signal.filtfilt(b, a, y) * 0.5).astype(np.float32)
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.iircomb.html
+    # https://ccrma.stanford.edu/~jos/pasp/Allpass_Two_Combs.html
+    # y(n) = b0x(n) + x(n-m) - aMy(n-M)
+    def phaser(self, info, dry=0.50, wet=0.50, passes = 8):
+        #y = info.samples
+        #b,a = signal.ellip(4, 0.01, 120, 0.125)
+        #for i in range(passes):
+        #   y += (signal.filtfilt(b, a, y) * 0.5).astype(np.float32)
+        #info.samples = (info.sampes * dry) + (y * wet)
+        x = info.samples
+        
+        b = [0,1]
+        a = [1,0]
 
-        info.samples = (info.samples * dry) + (y * wet)
+        w, h = signal.freqz(b, a)
+
+        for i in range(passes):
+            y1 = signal.lfilter(b, a, x)
+            x = (x * dry) + (y1 * wet)
+
+        info.samples = (info.samples * dry) + (x * wet)
+        info.samples = info.samples.astype(np.float32)
+
         return info
+
 
     def clipping(self, info, percent):
         info.samples = info.samples * 32768
