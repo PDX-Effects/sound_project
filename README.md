@@ -1,4 +1,4 @@
-#80s Effect App Sound Project \
+# 80s Effect App Sound Project 
 Team: 80's Effect App \
 Members: Kelsey Larson, kelsey36@pdx.edu; Adam La Fleur, alafleur@pdx.edu; Maeve Hoffer,  dhoffer@pdx.edu
 
