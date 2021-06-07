@@ -52,6 +52,18 @@ class IO:
         return self.base_freq * 2 ** ((midi - 69) / 12)
 
     def song_gen(self, info, notes, time, rate=48000):
+        info.samplesize = pyaudio.paFloat32
+        info.nchannels = 1
+        info.sampwidth = 2
+        info.framerate = rate
+
+        notes = notes.split(' ')
+        note_length = time / len(notes)
+
+        info.samples = (np.sin(2 * np.pi * np.arange(rate * note_length)) * key[notes[0]] / rate)
+        for note in notes[1:]:
+            frequency = key[note]
+            np.append(info.samples, (np.sin(2 * np.pi * np.arange(rate * note_length) * frequency / rate))).astype(np.float32)
 
         return info
 

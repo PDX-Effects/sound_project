@@ -122,7 +122,7 @@ def file_menu(info, audio, width):
         info.filename = input("Enter File Name: ")
         print("https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies")
         song = input("Enter Song Line as Notes: ")
-        time = 1.0
+        time = 3.0
         if info.filename != '':
             info = audio.song_gen(info, song, time)
         else:
@@ -177,7 +177,6 @@ def mod_menu(info, eff, width):
     print("2.  Apply Tremolo Effect. ")
     print("3.  Apply Flanger Effect. ")
     print("4.  Apply Phaser Effect. ")
-    print("5.  Apply Echo Effect. ")
     print((width - 2) * "-")
     print()
     try:
@@ -189,12 +188,19 @@ def mod_menu(info, eff, width):
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            delay = int(input("Enter Delay in Milliseconds: "))
-            if delay > 0:
+            dec = input("Load Defaults? (Y or N): ")
+            if dec == 'Y':
+                info = eff.chorus(info)
                 print("Applying: Chorus Effect! ")
-                info = eff.chorus(info, delay)
-            else:
-                print("Error: Improper Delay Value! ")
+            elif dec == 'N':
+                freq = int(input("Enter Frequency (Hz): "))
+                dry = float(input("Enter Dry Value: "))
+                wet = float(input("Enter Wet Value: "))
+                delay = float(input("Enter Delay Value: "))
+                depth = float(input("Enter Depth Value: "))
+                phase = float(input("Enter Phase Value: "))
+                info = eff.chorus(info, freq, dry, wet, delay, depth, phase)
+                print("Applying: Chorus Effect! ")
     elif choice == 2:
         if info.samples is None:
             print("Error: Samples Not Present! ")
@@ -209,7 +215,6 @@ def mod_menu(info, eff, width):
                 wet = float(input("Enter Wet Value: "))
                 info = eff.tremolo(info, freq, dry, wet)
                 print("Applying: Tremolo Effect! ")
-
     elif choice == 3:
         if info.samples is None:
             print("Error: Samples Not Present! ")
@@ -227,7 +232,6 @@ def mod_menu(info, eff, width):
                 phase = float(input("Enter Phase Value: "))
                 info = eff.flang(info, freq, dry, wet, delay, depth, phase)
                 print("Applying: Flanger Effect! ")
-
     elif choice == 4:
         if info.samples is None:
             print("Error: Samples Not Present! ")
@@ -239,16 +243,6 @@ def mod_menu(info, eff, width):
             elif dec == 'N':
                 info = eff.phaser(info)
                 print("Applying: Flanger Effect! ")
-    elif choice == 5:
-        if info.samples is None:
-            print("Error: Samples Not Present! ")
-        else:
-            delay = int(input("Enter Delay in Milliseconds: "))
-            if delay > 0:
-                print("Applying: Echo Effect! ")
-                info = eff.echo(info, delay)
-            else:
-                print("Error: Improper Delay Value! ")
     return info
 
 
@@ -258,9 +252,8 @@ def time_menu(info, eff, width):
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
     print_filename(info, width)
-    print("1.  Planned: Apply Reverb Effect. ")
-    print("2.  Apply Delay Effect. ")
-    print("3.  Planned: Apply Echo Effect. ")
+    print("1.  Dropped: Apply Reverb Effect. ")
+    print("2.  Apply Echo/Delay Effect. ")
     print((width - 2) * "-")
     print()
     try:
@@ -272,29 +265,22 @@ def time_menu(info, eff, width):
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Planned: Reverb Effect! ")
-    elif choice == 2:
+            print("Dropped: Reverb Effect! ")
+    if choice == 2:
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
             dec = input("Load Defaults? (Y or N): ")
             if dec == 'Y':
                 info = eff.delay(info)
-                print("Applying: Delay Effect! ")
+                print("Applying: Echo/Delay Effect! ")
             elif dec == 'N':
                 delay = int(input("Enter Delay in Milliseconds: "))
-                dry = float(input("Enter Dry Value: "))
-                wet = float(input("Enter Wet Value: "))
                 if delay > 0:
-                    info = eff.delay(info, delay, dry, wet)
-                    print("Applying: Delay Effect! ")
+                    info = eff.delay(info, delay)
+                    print("Applying: Echo/Delay Effect! ")
                 else:
                     print("Error: Improper Delay Value! ")
-    elif choice == 3:
-        if info.samples is None:
-            print("Error: Samples Not Present! ")
-        else:
-            print("Planned: Echo Effect! ")
     return info
 
 
@@ -304,8 +290,8 @@ def spec_menu(info, eff, width):
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + (half + 1) * "-")
     print_filename(info, width)
-    print("1.  Planned: Apply EQ Effect. ")
-    print("2.  Planned: Apply Panning Effect. ")
+    print("1.  Dropped: Apply EQ Effect. ")
+    print("2.  Dropped: Apply Panning Effect. ")
     print((width - 2) * "-")
     print()
     try:
@@ -317,12 +303,12 @@ def spec_menu(info, eff, width):
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Planned: EQ Effect! ")
+            print("Dropped: EQ Effect! ")
     elif choice == 2:
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Planned: Panning Effect! ")
+            print("Dropped: Panning Effect! ")
     return info
 
 
@@ -332,8 +318,8 @@ def dynamic_menu(info, eff, width):
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + half * "-")
     print_filename(info, width)
-    print("1.  Planned: Apply Compression Effect. ")
-    print("2.  Planned: Apply Distortion Effect. ")
+    print("1.  Dropped: Apply Compression Effect. ")
+    print("2.  Dropped: Apply Distortion Effect. ")
     print("3.  Apply Clipping Effect. ")
     print("4.  Apply Gain Effect. ")
     print("5.  Apply Loss Effect. ")
@@ -348,12 +334,12 @@ def dynamic_menu(info, eff, width):
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Planned: Compression Effect! ")
+            print("Dropped: Compression Effect! ")
     elif choice == 2:
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Planned: Distortion Effect! ")
+            print("Dropped: Distortion Effect! ")
     elif choice == 3:
         if info.samples is None:
             print("Error: Samples Not Present! ")
@@ -420,8 +406,7 @@ if __name__ == "__main__":
     eff_master = Effects()
 
     # Place Code Here to Specifically Test Effect
-    info_master.filename = 'gc'
-    info_master = audio_master.read_audio(info_master, path)
+
 
     # End Of Testing Area
     main_menu(info_master, audio_master, eff_master, t_size[0])
