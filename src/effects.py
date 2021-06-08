@@ -69,31 +69,11 @@ class Effects:
         info.samples = samp
         return info
 
-    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.iircomb.html
     # https://ccrma.stanford.edu/~jos/pasp/Allpass_Two_Combs.html
     # https://www.rfwireless-world.com/Terminology/All-Pass-Filter-basics-and-types.html
     # y(n) = b0x(n) + x(n-m) - aMy(n-M)
-    def phaser(self, info, dry=0.99, wet=0.01, passes = 1):
-        #y = info.samples
-        #b,a = signal.ellip(4, 0.01, 120, 0.125)
-        #for i in range(passes):
-        #   y += (signal.filtfilt(b, a, y) * 0.5).astype(np.float32)
-        #info.samples = (info.sampes * dry) + (y * wet)
-        y = info.samples
-        b, a = signal.iirfilter(10, y, rs=60, btype='band', analog=True, ftype='cheby2')
-
-        for i in range(passes):
-            w, h = signal.freqs(b, a, len(info.samples))
-            y = y + w
-
-        info.samples = (info.samples * dry) + (y * wet)
+    def phaser(self, info, dry=0.5, wet=0.5, passes = 1):
         return info
-
-            
-
-       
-
-    # https://dsp.stackexchange.com/questions/19998/allpass-filter-feedforward-feedback-design-and-code
 
     def clipping(self, info, percent):
         info.samples = info.samples * 32768
