@@ -122,7 +122,7 @@ def file_menu(info, audio, width):
         info.filename = input("Enter File Name: ")
         print("https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies")
         song = input("Enter Song Line as Notes: ")
-        time = 3.0
+        time = 10.0
         if info.filename != '':
             info = audio.song_gen(info, song, time)
         else:

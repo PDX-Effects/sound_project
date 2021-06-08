@@ -49,7 +49,7 @@ class IO:
         return 0
 
     def midi_freq(self, midi):
-        return self.base_freq * 2 ** ((midi - 69) / 12)
+        return self.base_freq * 2 ** (((int(midi) - 69)) / 12)
 
     def song_gen(self, info, notes, time = 10, rate=48000):
         info.samplesize = pyaudio.paFloat32
@@ -59,19 +59,15 @@ class IO:
 
         notes = notes.split(' ')
         note_length = time / len(notes)
-        info.samples = (np.sin(2 * np.pi * np.arange(rate * note_length)) * (pow(2,(key[notes[0]])/12) * 440) / rate)
-        for note in notes: 
-            frequency = pow(2,(key[note])/12) * 440
-            #new_note = (np.sin(2 * np.pi * np.arange(rate * note_length)) * frequency / rate)
-            #info = self.audio_append(info, new_note)
-            np.append(info.samples[:-100], self.chord_gen(info, frequency, note_length))
+        song = info
 
-        #info.samples = (np.sin(2 * np.pi * np.arange(rate * note_length)) * (pow(2,(key[notes[0]])/12) * 440) / rate)
-        #for note in notes[1:]:
-        #    frequency = pow(2,(key[note])/12) * 440
-        #    result = (np.sin(2 * np.pi * np.arange(rate * note_length)) * frequency / rate)
-        #    np.append(info.samples[:-5], result.astype(np.float32))
+        song.samples = self.chord_gen(song, self.midi_freq(key[notes[0]]), note_length)
+        for note in notes[1:]: 
+            frequency = self.midi_freq(key[note])
+            chord = self.chord_gen(song, frequency, note_length)
+            song = self.audio_append(song, chord)
 
+        info.samples = song.samples
         return info
 
     def audio_append(self, info, new_add, times=1, rate=0.25):
@@ -99,9 +95,10 @@ class IO:
         third = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_three]) / rate))
         fifth = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_five]) / rate))
 
-        info.samples = (first * 0.33) + (third * 0.33) + (fifth * 0.33)
-        info.samples = info.samples.astype(np.float32)
-        return info.samples
+        #info.samples = (first * 0.33) + (third * 0.33) + (fifth * 0.33)
+        #info.samples = info.samples.astype(np.float32)
+        #return info.samples
+        return ((first * 0.33) + (third * 0.33) + (fifth * 0.33)).astype(np.float32)
 
     def play_audio(self, info):
         play = info.samples.tobytes()
