@@ -2,12 +2,30 @@
 Team: 80's Effect App \
 Members: Kelsey Larson, kelsey36@pdx.edu; Adam La Fleur, alafleur@pdx.edu; Maeve Hoffer,  dhoffer@pdx.edu
 
+**Contributions** \
+==Effects==
+delay - Kelsey
+chorus - Kelsey\Adam
+flang - Adam
+phaser - Maeve
+clipping - Adam
+tremolo - Adam
+
+==Effects==
+Main/Key_Dict/(Read/Write/Play) - Group
+Song_Gen - Maeve
+Chord_Gen - Maeve
+
 **what is this project** \
 This project serves as a sound editing application, demonstrating an array of effects on the chosen File. This file can be user uploaded or the provided wav files in the repo. Once a file is loaded, the user can apply effects as desired and play the resulting audio.
 
 **How to build and run the project**\
+The process to install the requirements is:
+
+pip install -r requirements.txt
+
 The project is intended to run an interface similar to a normal sound editor. A user can load a file provided in the repo, choose effects to apply, and then play back that same file. On the command line:
-py .\src\main.py
+py .\src\main.py. The user can also a wav file preferably mono to the sound_files folder in src.
 
 From the main menu, first choose a sound file to manipulate (1.File Menu). Once chosen, you are redirected back to the main menu where you can choose a specific effects menu. Finally, head back to the file menu to play the file with the selected effects.
 
