@@ -51,7 +51,7 @@ class IO:
     def midi_freq(self, midi):
         return self.base_freq * 2 ** ((midi - 69) / 12)
 
-    def song_gen(self, info, notes, time, rate=48000):
+    def song_gen(self, info, notes, time = 10, rate=48000):
         info.samplesize = pyaudio.paFloat32
         info.nchannels = 1
         info.sampwidth = 2
@@ -59,11 +59,18 @@ class IO:
 
         notes = notes.split(' ')
         note_length = time / len(notes)
+        info.samples = (np.sin(2 * np.pi * np.arange(rate * note_length)) * (pow(2,(key[notes[0]])/12) * 440) / rate)
+        for note in notes: 
+            frequency = pow(2,(key[note])/12) * 440
+            #new_note = (np.sin(2 * np.pi * np.arange(rate * note_length)) * frequency / rate)
+            #info = self.audio_append(info, new_note)
+            np.append(info.samples[:-100], self.chord_gen(info, frequency, note_length))
 
-        info.samples = (np.sin(2 * np.pi * np.arange(rate * note_length)) * key[notes[0]] / rate)
-        for note in notes[1:]:
-            frequency = key[note]
-            np.append(info.samples, (np.sin(2 * np.pi * np.arange(rate * note_length) * frequency / rate))).astype(np.float32)
+        #info.samples = (np.sin(2 * np.pi * np.arange(rate * note_length)) * (pow(2,(key[notes[0]])/12) * 440) / rate)
+        #for note in notes[1:]:
+        #    frequency = pow(2,(key[note])/12) * 440
+        #    result = (np.sin(2 * np.pi * np.arange(rate * note_length)) * frequency / rate)
+        #    np.append(info.samples[:-5], result.astype(np.float32))
 
         return info
 
