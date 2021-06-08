@@ -49,7 +49,7 @@ class IO:
         return 0
 
     def midi_freq(self, midi):
-        return self.base_freq * 2 ** (((int(midi) - 69)) / 12)
+        return self.base_freq * 2 ** ((midi - 69) / 12)
 
     def song_gen(self, info, notes, time = 10, rate=48000):
         info.samplesize = pyaudio.paFloat32
