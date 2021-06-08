@@ -3,18 +3,18 @@ Team: 80's Effect App \
 Members: Kelsey Larson, kelsey36@pdx.edu; Adam La Fleur, alafleur@pdx.edu; Maeve Hoffer,  dhoffer@pdx.edu
 
 **Contributions** \
-==Effects==
-delay - Kelsey
-chorus - Kelsey\Adam
-flang - Adam
-phaser - Maeve
-clipping - Adam
-tremolo - Adam
+==Effects== \
+delay - Kelsey \
+chorus - Kelsey / Adam \
+flang - Adam \
+phaser - Maeve \
+clipping - Adam \
+tremolo - Adam 
 
-==Effects==
-Main/Key_Dict/(Read/Write/Play) - Group
-Song_Gen - Maeve
-Chord_Gen - Maeve
+==Effects== \
+Main/Key_Dict/(Read/Write/Play) - Group \
+Song_Gen - Maeve \
+Chord_Gen - Maeve 
 
 **what is this project** \
 This project serves as a sound editing application, demonstrating an array of effects on the chosen File. This file can be user uploaded or the provided wav files in the repo. Once a file is loaded, the user can apply effects as desired and play the resulting audio.
