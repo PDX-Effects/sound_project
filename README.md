@@ -16,7 +16,7 @@ Main/Key_Dict/(Read/Write/Play) - Group \
 Song_Gen - Maeve \
 Chord_Gen - Maeve 
 
-Edit\Cleanup - Adam
+Edit\Cleanup - Adam \
 A majority of the frame for the code and cleanup where performed hence the large amount of line changes, otherwise we all contributed around the same amount.
 
 **what is this project** \
