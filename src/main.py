@@ -265,7 +265,8 @@ def time_menu(info, eff, width):
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
-            print("Dropped: Reverb Effect! ")
+            #print("Dropped: Reverb Effect! ")
+            info = eff.reverb(info)
     if choice == 2:
         if info.samples is None:
             print("Error: Samples Not Present! ")
