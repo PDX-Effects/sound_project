@@ -97,7 +97,7 @@ class IO:
         try:
             base_freq = self.midi_freq(key[note])
         except KeyError:
-            base_freq = 0
+            base_freq = self.base_freq
         first = (np.sin(2 * np.pi * np.arange(rate * time) * base_freq / rate))
         third = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_three]) / rate))
         fifth = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_five]) / rate))
