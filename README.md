@@ -16,6 +16,9 @@ Main/Key_Dict/(Read/Write/Play) - Group \
 Song_Gen - Maeve \
 Chord_Gen - Maeve 
 
+Edit\Cleanup - Adam
+A majority of the frame for the code and cleanup where performed hence the large amount of line changes, otherwise we all contributed around the same amount.
+
 **what is this project** \
 This project serves as a sound editing application, demonstrating an array of effects on the chosen File. This file can be user uploaded or the provided wav files in the repo. Once a file is loaded, the user can apply effects as desired and play the resulting audio.
 
@@ -27,7 +30,16 @@ pip install -r requirements.txt
 The project is intended to run an interface similar to a normal sound editor. A user can load a file provided in the repo, choose effects to apply, and then play back that same file. On the command line:
 py .\src\main.py. The user can also a wav file preferably mono to the sound_files folder in src.
 
-From the main menu, first choose a sound file to manipulate (1.File Menu). Once chosen, you are redirected back to the main menu where you can choose a specific effects menu. Finally, head back to the file menu to play the file with the selected effects.
+From the main menu, first choose a sound file to manipulate (1.File Menu). 
+Once chosen, you are redirected back to the main menu where you can choose a specific effects menu. 
+Finally, head back to the file menu to play the file with the selected effects.
+
+The File Menu has options to load a file, create a file (from a sequence of notes and total play time), view a file, play a file, and save a file, also append to make longer
+The Modulation Menu has options such as flanger, chorus, tremolo, etc.
+The Time Menu has options that effect timing. Reverb was drop due to time restraints.
+The Spectral Menu had options to perform eq and panning but were dropped due to difficulty + time restraints.
+The Dynamic Menu has effects that effect the distance between peaks. Distortion and Compression were dropped. Clipping, Gain, and Loss are the current effects.
+The Filters Menu has no filters listed but existed for future implementations of various filters the user could chain together. Dropped due to time.
 
 **Testing:** 
 \
