@@ -61,12 +61,13 @@ class IO:
         note_length = time / len(notes)
         song = info
 
-        song.samples = self.chord_gen(song, self.midi_freq(key[notes[0]]), note_length)
-        for note in notes[1:]: 
-            frequency = self.midi_freq(key[note])
-            chord = self.chord_gen(song, frequency, note_length)
-            song = self.audio_append(song, chord)
-
+        song.samples = []
+        for note in notes:
+            chord = self.chord_gen(note, note_length)
+            if len(song.samples) == 0:
+                song.samples = chord
+            else:
+                song = self.audio_append(song, chord)
         info.samples = song.samples
         return info
 
@@ -75,10 +76,8 @@ class IO:
             buff_size = int(info.framerate * rate)
             # Get End of samples relative to buff_size
             first = info.samples[-buff_size:]
-            print(first)
             # Cut first out of samples
             info.samples = info.samples[:-buff_size]
-            print(info.samples)
             # Get beginning of new_add
             last = new_add[:buff_size]
             # Cut last out of new_add
@@ -88,16 +87,20 @@ class IO:
             # Append back together
             info.samples = np.append(info.samples, buff_zone)
             info.samples = np.append(info.samples, new_add)
+            info.samples = info.samples.astype(np.float32)
         return info
 
-    def chord_gen(self, info, base_freq=440, time=1.0, step_three=4, step_five=7, rate=48000):
+    def chord_gen(self, note, time=1.0, step_three=4, step_five=7, rate=48000):
+        if 'm' in note:
+            step_three -= 1
+            note = note.replace('m', '')
+        try:
+            base_freq = self.midi_freq(key[note])
+        except KeyError:
+            base_freq = 0
         first = (np.sin(2 * np.pi * np.arange(rate * time) * base_freq / rate))
         third = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_three]) / rate))
         fifth = (np.sin(2 * np.pi * np.arange(rate * time) * (base_freq * just_ratios[step_five]) / rate))
-
-        #info.samples = (first * 0.33) + (third * 0.33) + (fifth * 0.33)
-        #info.samples = info.samples.astype(np.float32)
-        #return info.samples
         return ((first * 0.33) + (third * 0.33) + (fifth * 0.33)).astype(np.float32)
 
     def play_audio(self, info):

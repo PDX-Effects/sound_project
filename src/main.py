@@ -146,7 +146,6 @@ def file_menu(info, audio, width):
             print("Error: Samples Not Present! ")
         else:
             filename = input("Enter Name for File: ")
-            print(filename == info.filename)
             over = True
             if info.filename == filename:
                 dec = input("Overwrite Original File? (Y or N):")
@@ -242,7 +241,7 @@ def mod_menu(info, eff, width):
                 print("Applying: Phaser Effect! ")
             elif dec == 'N':
                 info = eff.phaser(info)
-                print("Applying: Flanger Effect! ")
+                print("Applying: Phaser Effect! (Non-Functional)")
     return info
 
 
@@ -379,10 +378,10 @@ def filter_menu(info, eff, width):
     half = int((width - len(title)) / 2) - 1
     print(half * "-" + title + half * "-")
     print_filename(info, width)
-    print("1.   ")
-    print("2.   ")
-    print("3.   ")
-    print("4.   ")
+    print("1. Dropped")
+    print("2. Dropped")
+    print("3. Dropped")
+    print("4. Dropped")
     print((width - 2) * "-")
     print()
     try:
@@ -406,7 +405,6 @@ if __name__ == "__main__":
     eff_master = Effects()
 
     # Place Code Here to Specifically Test Effect
-
 
     # End Of Testing Area
     main_menu(info_master, audio_master, eff_master, t_size[0])

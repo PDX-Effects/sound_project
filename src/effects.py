@@ -18,9 +18,6 @@ class Effects:
         mod_signal = info.samples[:-buff_size]
 
         info.samples = add(info.samples, buffer + mod_signal,  info.sampwidth)
-        # lfo_values = self.LFO(info)
-        # samples = [next(lfo_values) for i in range(info.framerate)]
-        # #gets every sample for a 20Hz sin wav sampled at 4800Hz(list of floats)
 
         # Convert from int16 buffer to float32 array
         info.samples = np.frombuffer(info.samples, dtype=np.int16)
@@ -83,7 +80,6 @@ class Effects:
             
         #info.samples = info.samples * dry + y * wet
         return info
-
 
     def clipping(self, info, percent):
         info.samples = info.samples * 32768
