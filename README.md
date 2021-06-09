@@ -17,7 +17,7 @@ Song_Gen - Maeve \
 Chord_Gen - Maeve 
 
 Edit\Cleanup - Adam \
-A majority of the frame for the code and cleanup where performed hence the large amount of line changes, otherwise we all contributed around the same amount.
+A majority of the frame for the code and cleanup, hence the large amount of line changes, otherwise we all contributed around the same amount.
 
 **what is this project** \
 This project serves as a sound editing application, demonstrating an array of effects on the chosen File. This file can be user uploaded or the provided wav files in the repo. Once a file is loaded, the user can apply effects as desired and play the resulting audio.
