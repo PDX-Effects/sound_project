@@ -70,15 +70,16 @@ class Effects:
     # https://www.rfwireless-world.com/Terminology/All-Pass-Filter-basics-and-types.html
     # y(n) = b0x(n) + x(n-m) - aMy(n-M)
     def phaser(self, info, dry=0.5, wet=0.5, passes = 1):
-        #y = info.samples
+        y = info.samples
 
-        #b = [0,1]
-        #a = [1,0]
+        b = [0,1]
+        a = [1,0]
 
-        #for i in range(passes):
-        #    y += (signal.filtfilt(b, a, y) * 0.5).astype(np.float32)
+        for i in range(passes):
+            y += (signal.filtfilt(b, a, y) * 0.5).astype(np.float32)
             
-        #info.samples = info.samples * dry + y * wet
+        info.samples = (info.samples * dry) + (y * wet)
+        info.samples = info.samples * 0.65
         return info
 
     def clipping(self, info, percent):

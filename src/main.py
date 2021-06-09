@@ -235,6 +235,8 @@ def mod_menu(info, eff, width):
         if info.samples is None:
             print("Error: Samples Not Present! ")
         else:
+            print("Please note that this effect is not yet functional.")
+            print("The resulting sound may be staticky, and the volume should be lowered before playing this effect.")
             dec = input("Load Defaults? (Y or N): ")
             if dec == 'Y':
                 info = eff.phaser(info)
